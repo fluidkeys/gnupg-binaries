@@ -15,6 +15,10 @@ for VERSION in $VERSIONS; do
   SOURCE_DIRECTORY="./gnupg-${VERSION}"
   OUTPUT_BINARY="/vagrant/bin/gnupg-${VERSION}/gpg2"
 
+  if [ ! -f "${TARBALL}" ]; then
+    wget "https://gnupg.org/ftp/gcrypt/gnupg/${TARBALL}"
+  fi
+
   if [ ! -d "$SOURCE_DIRECTORY" ]; then 
     tar -xf $TARBALL
   fi
