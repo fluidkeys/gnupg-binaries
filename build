@@ -1,0 +1,36 @@
+#!/bin/sh -eux
+
+THIS_SCRIPT=$0
+THIS_DIR=$(dirname ${THIS_SCRIPT})
+
+VERSIONS="
+  2.1.11 \
+  2.2.4 \
+  2.2.10"
+
+for VERSION in $VERSIONS; do
+  cd ${THIS_DIR}/source
+
+  TARBALL="gnupg-${VERSION}.tar.bz2"
+  SOURCE_DIRECTORY="./gnupg-${VERSION}"
+  OUTPUT_BINARY="/vagrant/bin/gnupg-${VERSION}/gpg2"
+
+  if [ ! -d "$SOURCE_DIRECTORY" ]; then 
+    tar -xf $TARBALL
+  fi
+
+  mkdir -p /vagrant/bin/
+
+  if [ ! -f "${OUTPUT_BINARY}" ]; then
+    mkdir -p $(dirname ${OUTPUT_BINARY})
+    cd $SOURCE_DIRECTORY
+    ./configure
+    make
+    BUILT_BINARY=$(find . -type f -executable -iname 'gpg' -or -name 'gpg2')
+    cp "${BUILT_BINARY}" "${OUTPUT_BINARY}"
+    cd -
+  fi
+
+  cd -
+done
+
